@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Inventory Item</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="container">
+    <h3>Add New Inventory Item</h3>
+
+    <form id="addItemForm">
+      <div class="form-group">
+        <label for="partName">Part Name:</label>
+        <input type="text" id="partName" required>
+        <span id="partNameError" class="error-message"></span>
+      </div>
+
+      <div class="form-group">
+        <label for="partCode">Part Code:</label>
+        <input type="text" id="partCode" required>
+        <span id="partCodeError" class="error-message"></span>
+      </div>
+
+      <div class="form-group">
+        <label for="quantity">Quantity:</label>
+        <input type="number" id="quantity" required>
+        <span id="quantityError" class="error-message"></span>
+      </div>
+
+      <div class="form-group">
+        <label for="mrp">MRP:</label>
+        <input type="number" id="mrp" required>
+        <span id="mrpError" class="error-message"></span>
+      </div>
+
+      <div class="form-group">
+        <label for="inwardDate">Inward Date:</label>
+        <input type="date" id="inwardDate" required>
+        <span id="inwardDateError" class="error-message"></span>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit">Add Item</button>
+        <button type="button" onclick="goBack()">Cancel</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    // Handle form submission
+    document.getElementById('addItemForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevent form submission
+
+      // Clear previous error messages
+      clearErrorMessages();
+
+      // Get form values
+      const partName = document.getElementById('partName').value;
+      const partCode = document.getElementById('partCode').value;
+      const quantity = document.getElementById('quantity').value;
+      const mrp = document.getElementById('mrp').value;
+      const inwardDate = document.getElementById('inwardDate').value;
+
+      let valid = true;
+
+      // Check if all fields are filled
+      if (!partName) {
+        document.getElementById('partNameError').textContent = "Part Name is required!";
+        valid = false;
+      }
+      if (!partCode) {
+        document.getElementById('partCodeError').textContent = "Part Code is required!";
+        valid = false;
+      }
+      if (!quantity) {
+        document.getElementById('quantityError').textContent = "Quantity is required!";
+        valid = false;
+      }
+      if (!mrp) {
+        document.getElementById('mrpError').textContent = "MRP is required!";
+        valid = false;
+      }
+      if (!inwardDate) {
+        document.getElementById('inwardDateError').textContent = "Inward Date is required!";
+        valid = false;
+      }
+
+      // If valid, add the item to the inventory table
+      if (valid) {
+        addItemToTable(partName, partCode, quantity, mrp, inwardDate);
+        alert('Item added successfully!');
+        goBack();
+      }
+    });
+
+    // Add item to inventory table
+    function addItemToTable(partName, partCode, quantity, mrp, inwardDate) {
+      const tableBody = window.opener.document.getElementById('tableBody');
+      const newRow = document.createElement('tr');
+
+      newRow.innerHTML = `
+        <td>${partName}</td>
+        <td>${partCode}</td>
+        <td>${quantity}</td>
+        <td>${mrp}</td>
+        <td>${inwardDate}</td>
+      `;
+
+      tableBody.appendChild(newRow);
+    }
+
+    // Clear previous error messages
+    function clearErrorMessages() {
+      document.getElementById('partNameError').textContent = "";
+      document.getElementById('partCodeError').textContent = "";
+      document.getElementById('quantityError').textContent = "";
+      document.getElementById('mrpError').textContent = "";
+      document.getElementById('inwardDateError').textContent = "";
+    }
+
+    // Go back to inventory list page
+    function goBack() {
+      window.close(); // Close the current page after adding item
+    }
+  </script>
+
+</body>
+</html>
