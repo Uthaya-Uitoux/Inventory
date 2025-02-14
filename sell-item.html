@@ -1,159 +1,191 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sell Inventory</title>
     <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
+</head>
+<body>
     <div class="container">
-      <h3>Sell Inventory</h3>
+        <h3>Sell Inventory</h3>
 
-      <form id="sellItemForm" onsubmit="sellItem(event)">
-        <div class="form-group">
-          <label for="partCode">Part Code:</label>
-          <!-- Searchable Dropdown -->
-          <div class="dropdown-container">
-            <input
-              type="text"
-              id="searchPartCode"
-              class="search-input"
-              placeholder="Search by part code or name"
-              oninput="filterParts()"
-            />
-            <div id="dropdownList" class="dropdown-list"></div>
-          </div>
-          <span id="partCodeError" class="error-message"></span>
-        </div>
+        <form id="sellItemForm" onsubmit="sellItem(event)">
+           <!--  <div class="form-group">
+                <label for="customerCode">Customer Code:</label>
+                <input type="text" id="customerCode" placeholder="Enter Customer Code" oninput="fetchCustomerDetails()" />
+                <span id="customerError" class="error-message"></span>
+            </div>
 
-        <div class="form-group">
-          <label for="quantity">Available Quantity:</label>
-          <input type="text" id="quantity" readonly />
-        </div>
+            <div class="form-group">
+                <label for="customerAddress">Customer Address:</label>
+                <input type="text" id="customerAddress" readonly />
+            </div> -->
 
-        <div class="form-group">
-          <label for="sellQuantity">Quantity to Sell:</label>
-          <input type="number" id="sellQuantity" required min="1" />
-          <span id="sellQuantityError" class="error-message"></span>
-        </div>
+            <div class="form-group">
+                <label for="partCode">Part Code:</label>
+                <div class="dropdown-container">
+                    <input
+                        type="text"
+                        id="searchPartCode"
+                        class="search-input"
+                        placeholder="Search by part code or name"
+                        oninput="filterParts()"
+                    />
+                    <div id="dropdownList" class="dropdown-list"></div>
+                </div>
+                <span id="partCodeError" class="error-message"></span>
+            </div>
 
-        <div class="form-group">
-          <label for="sellingPrice">Selling Price:</label>
-          <input type="number" id="sellingPrice" readonly />
-        </div>
+            <div class="form-group">
+                <label for="quantity">Available Quantity:</label>
+                <input type="text" id="quantity" readonly />
+            </div>
 
-        <div class="form-group">
-          <label for="saleDate">Sale Date:</label>
-          <input type="date" id="saleDate" required />
-        </div>
+            <div class="form-group">
+                <label for="sellQuantity">Quantity to Sell:</label>
+                <input type="number" id="sellQuantity" required min="1" />
+                <span id="sellQuantityError" class="error-message"></span>
+            </div>
 
-        <div class="form-actions">
-          <button type="submit">Sell Item</button>
-          <button type="button" onclick="goBack()">Cancel</button>
-        </div>
-      </form>
+            <div class="form-group">
+                <label for="sellingPrice">Selling Price:</label>
+                <input type="number" id="sellingPrice" readonly />
+            </div>
+
+            <div class="form-group">
+                <label for="saleDate">Sale Date:</label>
+                <input type="date" id="saleDate" required />
+            </div>
+
+            <div class="form-actions">
+                <button class="buttons" type="submit">Sell Item</button>
+                <button class="buttons" type="button" onclick="goBack()">Cancel</button>
+            </div>
+        </form>
     </div>
 
     <script>
-      let selectedPart;
+        let selectedPart;
 
-      // Set today's date as the default value for sale date input
-      document.addEventListener("DOMContentLoaded", function () {
-        const today = new Date().toISOString().split("T")[0]; 
-        document.getElementById("saleDate").value = today;
+        // Set today's date as the default value for sale date input
+        document.addEventListener("DOMContentLoaded", function () {
+            const today = new Date().toISOString().split("T")[0];
+            document.getElementById("saleDate").value = today;
 
-        const inventory = JSON.parse(localStorage.getItem("inventory")) || [];
-        const searchResults = document.getElementById("dropdownList");
+            const inventory = JSON.parse(localStorage.getItem("inventory")) || [];
+            const searchResults = document.getElementById("dropdownList");
 
-        inventory.forEach((part) => {
-          let option = document.createElement("div");
-          option.classList.add("dropdown-item");
-          option.textContent = `${part.partCode} - ${part.partName}`;
-          option.dataset.quantity = part.quantity;
-          option.dataset.partCode = part.partCode;
-          option.onclick = function () {
-            selectPart(part);
-          };
-          searchResults.appendChild(option);
-        });
-      });
-
-      function selectPart(part) {
-        selectedPart = part;
-        document.getElementById("searchPartCode").value = `${part.partCode} - ${part.partName}`;
-        document.getElementById("quantity").value = part.quantity;
-        
-        // Set default selling price, if undefined, set it to 0
-        document.getElementById("sellingPrice").value = part.sellingPrice ? part.sellingPrice : 0;
-
-        document.getElementById("dropdownList").innerHTML = ""; 
-      }
-
-      function filterParts() {
-        const searchInput = document.getElementById("searchPartCode").value.toLowerCase();
-        const inventory = JSON.parse(localStorage.getItem("inventory")) || [];
-        const searchResults = document.getElementById("dropdownList");
-
-        searchResults.innerHTML = "";
-
-        inventory.forEach((part) => {
-          if (
-            part.partCode.toLowerCase().includes(searchInput) ||
-            part.partName.toLowerCase().includes(searchInput)
-          ) {
-            let option = document.createElement("div");
-            option.classList.add("dropdown-item");
-            option.textContent = `${part.partCode} - ${part.partName}`;
-            option.dataset.quantity = part.quantity;
-            option.dataset.partCode = part.partCode;
-            option.onclick = function () {
-              selectPart(part);
-            };
-            searchResults.appendChild(option);
-          }
+            inventory.forEach((part) => {
+                let option = document.createElement("div");
+                option.classList.add("dropdown-item");
+                option.textContent = `${part.partCode} - ${part.partName}`;
+                option.dataset.quantity = part.quantity;
+                option.dataset.partCode = part.partCode;
+                option.onclick = function () {
+                    selectPart(part);
+                };
+                searchResults.appendChild(option);
+            });
         });
 
-        searchResults.style.display = searchResults.innerHTML ? "block" : "none";
-      }
+        function fetchCustomerDetails() {
+            const customerCode = document.getElementById("customerCode").value;
+            const customers = JSON.parse(localStorage.getItem("customers")) || []; // Assuming customer data is stored in localStorage
 
-      function sellItem(event) {
-        event.preventDefault();
-        const sellQuantity = parseInt(document.getElementById("sellQuantity").value);
-
-        if (sellQuantity > selectedPart.quantity) {
-          document.getElementById("sellQuantityError").textContent =
-            "Quantity cannot be greater than available stock.";
-          return;
+            const customer = customers.find(c => c.code === customerCode);
+            if (customer) {
+                document.getElementById("customerAddress").value = customer.address;
+                document.getElementById("customerError").textContent = "";
+            } else {
+                document.getElementById("customerAddress").value = "";
+                document.getElementById("customerError").textContent = "Customer not found.";
+            }
         }
 
-        const inventory = JSON.parse(localStorage.getItem("inventory")) || [];
-        const soldItems = JSON.parse(localStorage.getItem("soldItems")) || [];
+        function selectPart(part) {
+            selectedPart = part;
+            document.getElementById("searchPartCode").value = `${part.partCode} - ${part.partName}`;
+            document.getElementById("quantity").value = part.quantity;
 
-        const partIndex = inventory.findIndex(
-          (part) => part.partCode === selectedPart.partCode
-        );
-        inventory[partIndex].quantity -= sellQuantity;
+            // Set the selling price and toggle readonly based on its value
+            const sellingPriceInput = document.getElementById("sellingPrice");
+            if (part.sellingPrice === 0 || part.sellingPrice === null || part.sellingPrice === undefined) {
+                sellingPriceInput.value = "";
+                sellingPriceInput.removeAttribute("readonly"); // Make it editable
+            } else {
+                sellingPriceInput.value = part.sellingPrice;
+                sellingPriceInput.setAttribute("readonly", true);
+            }
+            document.getElementById("dropdownList").innerHTML = "";
+        }
 
-        const saleDate = document.getElementById("saleDate").value;
-        const sellingPrice = document.getElementById("sellingPrice").value;
+        function filterParts() {
+            const searchInput = document.getElementById("searchPartCode").value.toLowerCase();
+            const inventory = JSON.parse(localStorage.getItem("inventory")) || [];
+            const searchResults = document.getElementById("dropdownList");
 
-        soldItems.push({
-          ...selectedPart,
-          quantity: sellQuantity,
-          sellingPrice: sellingPrice,
-          saleDate: saleDate, 
-        });
+            searchResults.innerHTML = "";
 
-        localStorage.setItem("inventory", JSON.stringify(inventory));
-        localStorage.setItem("soldItems", JSON.stringify(soldItems));
+            inventory.forEach((part ) => {
+                if (part.partCode.toLowerCase().includes(searchInput) || part.partName.toLowerCase().includes(searchInput)) {
+                    let option = document.createElement("div");
+                    option.classList.add("dropdown-item");
+                    option.textContent = `${part.partCode} - ${part.partName}`;
+                    option.dataset.quantity = part.quantity;
+                    option.dataset.partCode = part.partCode;
+                    option.onclick = function () {
+                        selectPart(part);
+                    };
+                    searchResults.appendChild(option);
+                }
+            });
 
-        window.location.href = "index.html";
-      }
+            searchResults.style.display = searchResults.innerHTML ? "block" : "none";
+        }
 
-      function goBack() {
-        window.history.back();
-      }
+        function sellItem(event) {
+            event.preventDefault();
+            const sellQuantity = parseInt(document.getElementById("sellQuantity").value);
+            const sellingPriceInput = document.getElementById("sellingPrice");
+
+            if (sellQuantity > selectedPart.quantity) {
+                document.getElementById("sellQuantityError").textContent = "Quantity cannot be greater than available stock.";
+                return;
+            } else {
+                document.getElementById("sellQuantityError").textContent = "";
+            }
+
+            const inventory = JSON.parse(localStorage.getItem("inventory")) || [];
+            const soldItems = JSON.parse(localStorage.getItem("soldItems")) || [];
+
+            const partIndex = inventory.findIndex(part => part.partCode === selectedPart.partCode);
+            if (partIndex !== -1) {
+                inventory[partIndex].quantity -= sellQuantity;
+
+                const updatedSellingPrice = sellingPriceInput.value.trim() || selectedPart.sellingPrice;
+                inventory[partIndex].sellingPrice = parseFloat(updatedSellingPrice);
+            }
+
+            const saleDate = document.getElementById("saleDate").value;
+            const sellingPrice = sellingPriceInput.value || selectedPart.sellingPrice;
+
+            soldItems.push({
+                ...selectedPart,
+                quantity: sellQuantity,
+                sellingPrice: parseFloat(sellingPrice),
+                saleDate: saleDate,
+            });
+
+            localStorage.setItem("inventory", JSON.stringify(inventory));
+            localStorage.setItem("soldItems", JSON.stringify(soldItems));
+
+            window.location.href = "index.html";
+        }
+
+        function goBack() {
+            window.history.back();
+        }
     </script>
-  </body>
+</body>
 </html>

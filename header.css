@@ -1,0 +1,40 @@
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #007bff; /* Header background color */
+  color: white;             /* Text color */
+  padding: 15px 20px;       /* Space inside the header */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.logo-title h2 {
+  margin: 0;
+  font-size: 24px;          /* Title font size */
+  font-weight: bold;
+}
+
+.profile-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;                /* Space between username and icon */
+}
+
+#username {
+  font-size: 16px;
+}
+
+.profile-icon {
+  width: 40px;              /* Icon size */
+  height: 40px;
+  border-radius: 50%;       /* Makes the icon circular */
+  cursor: pointer;          /* Indicates it's clickable */
+  border: 2px solid white;  /* Optional border */
+  object-fit: cover;        /* Ensures the image fits perfectly */
+}
+
+/* Hover effect for profile icon */
+.profile-icon:hover {
+  transform: scale(1.05);   /* Slight zoom on hover */
+  transition: transform 0.2s ease-in-out;
+}

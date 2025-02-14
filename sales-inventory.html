@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sales Inventory</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div class="container">
+    <div id="header-placeholder"></div>
+    <div class="search-filter-container">
+        <h2>Sales Inventory</h2>
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Search inventory..."
+          onkeyup="filterInventory()"
+        />
+        <button class="buttons" onclick="openAddPage()">Add</button>
+        <div class="actions-buttons">
+          <button class="buttons" onclick="importInventory()">Import</button>
+          <button class="buttons" onclick="exportInventory()">Export</button>
+        </div>
+        <button class="buttons" onclick="openSellPage()">Sell</button>
+       
+      </div>
+    <div class="table-container">
+    <table id="inventoryTable">
+        <thead>
+            <tr>
+                <th>S.No</th>
+                <th>Part Name</th>
+                <th>Part Code</th>
+                <th>Sold Quantity</th>
+                <th>Selling Price</th>
+                <th>Date Sold</th>
+            </tr>
+        </thead>
+        <tbody id="salesTableBody"></tbody>
+    </table>
+</div>
+<div class="button-container">
+    <div id="paginationControls">
+        <button class="buttons" id="prevPage" onclick="changePage(-1)">Previous</button>
+        <span id="pageNumber">Page 1</span>
+        <button class="buttons" id="nextPage" onclick="changePage(1)">Next</button>
+    </div>
+    <button class="buttons" onclick="goBack()">Cancel</button>
+</div>
+</div>
+
+<script>
+     document.addEventListener("DOMContentLoaded", () => {
+        fetch("header.html")
+          .then((response) => response.text())
+          .then((data) => {
+            document.getElementById("header-placeholder").innerHTML = data;
+          })
+          .catch((error) => console.error("Error loading header:", error));
+
+        loadInventoryItems();
+      });
+    let currentPage = 1;
+    const itemsPerPage = 10; // Number of items to display per page
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadSalesItems();
+    });
+
+    function loadSalesItems() {
+        const salesTableBody = document.getElementById('salesTableBody');
+        const salesData = JSON.parse(localStorage.getItem('soldItems')) || [];
+
+        // Calculate total pages
+        const totalPages = Math.ceil(salesData.length / itemsPerPage);
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const currentPageItems = salesData.slice(startIndex, endIndex);
+
+        salesTableBody.innerHTML = '';
+
+        currentPageItems.forEach((item, index) => {
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td>${startIndex + index + 1}</td>
+                <td>${item.partName}</td>
+                <td>${item.partCode}</td>
+                <td>${item.quantity}</td>
+                <td>₹${item.sellingPrice}</td>
+                <td>${formatDate(item.saleDate)}</td>
+            `;
+            salesTableBody.appendChild(newRow);
+        });
+
+        // Update pagination controls
+        document.getElementById('pageNumber').innerText = `Page ${currentPage}`;
+        document.getElementById('prevPage').disabled = currentPage === 1;
+        document.getElementById('nextPage').disabled = currentPage === totalPages;
+    }
+
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) return "";
+        return `${date.getDate().toString().padStart(2, "0")}-${(date.getMonth() + 1)
+            .toString()
+            .padStart(2, "0")}-${date.getFullYear()}`;
+    }
+
+    function changePage(direction) {
+        const salesData = JSON.parse(localStorage.getItem('soldItems')) || [];
+        const totalPages = Math.ceil(salesData.length / itemsPerPage);
+
+        // Update current page
+        currentPage += direction;
+
+        // Ensure currentPage stays within bounds
+        if (currentPage < 1) currentPage = 1;
+        if (currentPage > totalPages) currentPage = totalPages;
+
+        loadSalesItems();
+    }
+
+    function openAddPage() {
+        // Open the Add Inventory page
+        window.location.href = "add-item.html"; // Change to your actual add page URL
+      }
+
+      function openSellPage() {
+        // Open the Sell Inventory page
+        window.location.href = "sell-item.html"; // Change to your actual sell page URL
+      }
+
+      function openViewPage(partCode) {
+        // Open the View Inventory page with the specific part code
+        window.location.href = `view.html?partCode=${partCode}`; // Change to your actual view page URL
+      }
+
+    function goBack() {
+        window.history.back(); // Go back to the previous page
+    }
+</script>
+
+</body>
+</html>

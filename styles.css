@@ -22,9 +22,9 @@ body {
 
 .container {
   max-width: 1400px;
-  margin: 50px auto;
+  margin: 20px auto;
   background: #fff;
-  padding: 30px;
+  padding: 10px;
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
 }
@@ -69,7 +69,7 @@ input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus {
   justify-content: space-between;
 }
 
-button {
+.buttons {
   cursor: pointer;
   background: var(--primary-color);
   color: #fff;
@@ -77,40 +77,54 @@ button {
   font-weight: bold;
   padding: 8px 15px;
   text-transform: uppercase;
-
 }
 
-button:hover {
+.buttons:hover {
   background: #388e3c;
   box-shadow: var(--box-shadow);
 }
 
-button[type="button"] {
+.buttons[type="button"] {
   background: #f44336;
 }
 
-button[type="button"]:hover {
+.buttons[type="button"]:hover {
   background: #d32f2f;
+}
+
+.button-container {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between; /* Space between items */
+  align-items: center; /* Center items vertically */
+}
+
+/* Table Wrapper for X-Axis Scrolling */
+.table-container {
+  overflow-x: auto; /* Enables horizontal scrolling */
+  width: 100%;
+  margin: 20px 0px;
+  border-radius: var(--border-radius);
 }
 
 /* Table Styling */
 table {
   width: 100%;
+  min-width: 1200px; /* Ensures horizontal scroll on small screens */
   border-collapse: collapse;
-  margin-top: 30px;
   border-radius: var(--border-radius);
-  overflow: hidden;
   box-shadow: var(--box-shadow);
 }
 
 th, td {
-  padding: 20px;
+  padding: 10px;
   text-align: left;
   border: 1px solid #ccc;
+  white-space: nowrap; /* Prevents text from wrapping */
 }
 
 th {
-  background-color: var(--primary-color); /* Green background for the header */
+  background-color: var(--primary-color);
   color: #fff;
   font-weight: bold;
 }
@@ -128,7 +142,7 @@ tbody tr:hover {
 .search-filter-container {
   display: flex;
   align-items: center;
-  gap: 10px; /* Space between input and button */
+  gap: 10px;
 }
 
 .search-filter-container input {
@@ -145,7 +159,7 @@ tbody tr:hover {
 }
 
 .add-button {
-  padding: 2px 10px; /* Reduce button size */
+  padding: 2px 10px;
   font-size: 14px;
   background-color: var(--primary-color);
   color: white;
@@ -158,19 +172,20 @@ tbody tr:hover {
 .add-button:hover {
   background-color: #388e3c;
 }
+
 .part-name-select {
-  width: 300px; /* Set the width similar to an input field */
-  font-size: 16px; /* Set the font size */
-  padding: 10px; /* Add padding for better appearance */
-  border: 1px solid #ccc; /* Border to match input field style */
-  border-radius: 4px; /* Rounded corners */
-  background-color: #fff; /* White background */
-  box-sizing: border-box; /* Ensure padding is included in width */
+  width: 300px;
+  font-size: 16px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  box-sizing: border-box;
 }
 
 .part-name-select:focus {
-  border-color: #007bff; /* Change border color on focus */
-  outline: none; /* Remove outline */
+  border-color: #007bff;
+  outline: none;
 }
 
 /* Additional styling for form */
@@ -192,6 +207,28 @@ tbody tr:hover {
   position: relative;
 }
 
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+}
+.header .logo {
+  display: flex;
+  align-items: center;
+}
+.header .logo img {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+}
+.profile {
+  position: relative;
+  cursor: pointer;
+}
+
 /* Styling for the search input */
 .search-input {
   width: 100%;
@@ -206,17 +243,17 @@ tbody tr:hover {
 /* Dropdown list styling */
 .dropdown-list {
   position: absolute;
-  top: 100%; /* Position it below the input field */
+  top: 100%;
   left: 0;
   right: 0;
-  max-height: 200px; /* Increased max height */
+  max-height: 200px;
   overflow-y: auto;
   border: 1px solid #ccc;
-  border-top: none; /* Remove top border for smooth transition */
+  border-top: none;
   background-color: #fff;
   z-index: 1;
   display: none;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Added subtle shadow */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
   margin-top: 4px;
 }
@@ -242,3 +279,53 @@ tbody tr:hover {
   font-size: 14px;
 }
 
+
+/* Login Page css */
+.login-body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.login-container {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  text-align: center;
+  width: 300px;
+}
+#username, #password {
+  width: 90%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+#username:focus, #password:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+#error-message {
+  color: red;
+  font-size: 0.9em;
+}
+/* View page */
+.view-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: #007bff;
+}
+.view-button:hover {
+  color: #0056b3;
+  transform: scale(1.1);
+}

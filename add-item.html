@@ -31,13 +31,25 @@
 
         <div class="form-group">
           <label for="mrp">MRP:</label>
-          <input type="number" id="mrp" required />
+          <input type="number" id="mrp" step="0.01" required />
           <span id="mrpError" class="error-message"></span>
         </div>
 
         <div class="form-group">
-          <label for="sellingPrice">Selling price:</label>
-          <input type="number" id="sellingPrice" required />
+          <label for="discount">Discount:</label>
+          <input type="number" id="discount" step="0.01" required />
+          <span id="discountError" class="error-message"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="sellingPrice">Selling Price:</label>
+          <input
+            type="number"
+            id="sellingPrice"
+            step="0.01"
+            required
+            readonly
+          />
           <span id="sellingPriceError" class="error-message"></span>
         </div>
 
@@ -48,8 +60,8 @@
         </div>
 
         <div class="form-actions">
-          <button type="submit">Add Item</button>
-          <button type="button" onclick="goBack()">Cancel</button>
+          <button class="buttons" type="submit">Add Item</button>
+          <button class="buttons" type="button" onclick="goBack()">Cancel</button>
         </div>
       </form>
     </div>
@@ -68,6 +80,9 @@
             10
           );
           const mrp = parseFloat(document.getElementById("mrp").value.trim());
+          const discount = parseFloat(
+            document.getElementById("discount").value
+          );
           const sellingPrice = parseFloat(
             document.getElementById("sellingPrice").value.trim()
           );
@@ -95,6 +110,11 @@
               "MRP must be greater than 0!";
             valid = false;
           }
+          if (!discount || discount <= 0) {
+            document.getElementById("discountError").textContent =
+              "Discount must be greater than 0!";
+            valid = false;
+          }
           if (!sellingPrice || sellingPrice <= 0) {
             document.getElementById("sellingPriceError").textContent =
               "Selling Price must be greater than 0!";
@@ -116,21 +136,16 @@
             if (existingItemIndex !== -1) {
               inventory[existingItemIndex].quantity =
                 parseInt(inventory[existingItemIndex].quantity, 10) + quantity;
-            }
-            // Check if selling price is undefined and update it
-            if (
-              inventory[existingItemIndex].sellingPrice === undefined ||
-              inventory[existingItemIndex].sellingPrice === 0
-            ) {
-              inventory[existingItemIndex].sellingPrice = sellingPrice;
+                inventory[existingItemIndex].sellingPrice = sellingPrice;
             } else {
               inventory.push({
                 partName,
                 partCode,
                 quantity,
                 mrp,
+                discount,
                 inwardDate,
-                sellingPrice,
+                sellingPrice, // Store the calculated selling price
               });
             }
 
@@ -145,6 +160,7 @@
         document.getElementById("partCodeError").textContent = "";
         document.getElementById("quantityError").textContent = "";
         document.getElementById("mrpError").textContent = "";
+        document.getElementById("discountError").textContent = "";
         document.getElementById("sellingPriceError").textContent = "";
         document.getElementById("inwardDateError").textContent = "";
       }
@@ -152,6 +168,20 @@
       function goBack() {
         window.history.back();
       }
+
+      // Calculate selling price based on discount input
+      document
+        .getElementById("discount")
+        .addEventListener("input", function () {
+          const mrp = parseFloat(document.getElementById("mrp").value) || 0;
+          const discount = parseFloat(this.value) || 0;
+
+          if (mrp > 0 && discount >= 0) {
+            const sellingPrice = mrp - mrp * (discount / 100);
+            document.getElementById("sellingPrice").value =
+              sellingPrice.toFixed(2);
+          }
+        });
     </script>
   </body>
 </html>
